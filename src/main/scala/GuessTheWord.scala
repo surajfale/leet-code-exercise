@@ -1,51 +1,47 @@
 package com.suraj.leetcode
 
 import scala.collection.mutable.ListBuffer
+import scala.util.Random
 
 /*
     https://leetcode.com/problems/guess-the-word/
  */
-class GuessTheWord {
+object GuessTheWord {
     def findSecretWord(wordlist: Array[String], master: Master): Unit = {
-        println(s"oList  ${wordlist.mkString("Array(", ", ", ")")}")
-        var oList: ListBuffer[String] = wordlist.to(ListBuffer)
-        var zeroMatches: ListBuffer[String] = new ListBuffer[String]
-        var chances = 10
-        while (chances > 0) {
+        var chances = 0
+        var oList: ListBuffer[String] = Random.shuffle(wordlist.toList).to(ListBuffer)
+        while (chances < 10) {
+            //println(s"*** B: Chance $chances , oList  $oList -> ${oList.length} ***")
             var nList: ListBuffer[String] = new ListBuffer[String]
-            var word = oList.head
-            var matchCount = master.guess(word)
-            chances -= 1
+            var (word: String, matchCount: Int) = guessWord(master, oList)
+            chances += 1
             if (matchCount == 6) return
-            else if (matchCount == 0) {
-                println(s"Before Zero ops $oList")
-                zeroMatches += word
-                var t_zeroMatches: ListBuffer[String] = new ListBuffer[String]
-                for (i <- 1 until oList.length) {
-                    if (isBelongToZeroMatches(zeroMatches, oList(i))) t_zeroMatches += oList(i)
-                }
-                oList --= t_zeroMatches.toList
-                println(s"After Zero ops $oList")
-            }
+            if (matchCount == 0) oList --= matchingZeroCountMembers(oList, word).toList
             for (i <- 1 until oList.length) {
                 var str = oList(i)
                 var n_matchCount = countMatches(word, str)
-                if ((n_matchCount >= matchCount && matchCount != 0) ||
-                    (n_matchCount == matchCount && matchCount == 0)) {
+                if (n_matchCount == matchCount) {
+                    //println(s"$word - $str, $n_matchCount")
                     nList += str
                 }
             }
-            oList = nList
-            println(s"Chance $chances , oList  $oList")
+            oList = Random.shuffle(nList)
+            //println(s"*** A: Chance $chances , oList  $oList -> ${oList.length} *** ${System.lineSeparator()}")
         }
-        println(oList.toString())
     }
 
-    def isBelongToZeroMatches(zeroMatches: ListBuffer[String], str: String): Boolean = {
-        for (l <- zeroMatches) {
-            if (countMatches(l, str) > 0) return true
+    private def guessWord(master: Master, oList: ListBuffer[String]) = {
+        var word = oList.head
+        var matchCount = master.guess(word)
+        (word, matchCount)
+    }
+
+    private def matchingZeroCountMembers(oList: ListBuffer[String], word: String): ListBuffer[String] = {
+        var t_zeroMatches: ListBuffer[String] = new ListBuffer[String]
+        for (i <- 1 until oList.length) {
+            if (countMatches(word, oList(i)) > 0) t_zeroMatches += oList(i)
         }
-        false
+        t_zeroMatches
     }
 
     def countMatches(s: String, l: String): Int = {
@@ -55,7 +51,6 @@ class GuessTheWord {
         for (i <- 0 until sChar.length) {
             if (sChar(i).equals(lChar(i))) matches += 1
         }
-        println(s"$s -> $l = $matches")
         matches
     }
 }
@@ -64,11 +59,12 @@ class Master(secretWord: String, guessCounter: Int) {
     var secretWordArr: Array[Char] = secretWord.toCharArray
     var guessCounterInc: Int = 0
     var foundWord = false
+
     def guess(word: String): Int = {
         guessCounterInc += 1
-        println(s"____ Master guess counter : $guessCounterInc ___")
+        println(s"_Master guess counter : $guessCounterInc _")
         if (guessCounterInc > guessCounter) {
-            println("You maxed out")
+            //println("You maxed out")
             throw new Exception("Failed")
         }
         var counter = 0
