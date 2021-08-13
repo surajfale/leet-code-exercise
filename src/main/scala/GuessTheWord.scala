@@ -26,7 +26,6 @@ class GuessTheWord {
                 }
                 oList --= t_zeroMatches.toList
                 println(s"After Zero ops $oList")
-                println(zeroMatches)
             }
             for (i <- 1 until oList.length) {
                 var str = oList(i)
