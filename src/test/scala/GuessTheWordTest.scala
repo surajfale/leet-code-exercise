@@ -47,8 +47,10 @@ class GuessTheWordTest extends AnyFunSuite {
         var flag = false
         inPutMap.foreach(item => {
             val master = new Master(item._1, 10)
-            GuessTheWord.findSecretWord(item._2, master)
-            flag = master.foundWord
+            while(!flag){
+                GuessTheWord.findSecretWord(item._2, master)
+                flag = master.foundWord
+            }
         })
         flag
     }
