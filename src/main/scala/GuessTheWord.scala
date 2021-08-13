@@ -62,15 +62,14 @@ class Master(secretWord: String, guessCounter: Int) {
 
     def guess(word: String): Int = {
         guessCounterInc += 1
-        println(s"_Master guess counter : $guessCounterInc _")
+//        println(s"_Master guess counter : $guessCounterInc _")
         if (guessCounterInc > guessCounter) {
             //println("You maxed out")
             throw new Exception("Failed")
         }
         var counter = 0
         if (word.equals(secretWord)) {
-            println("*** You guessed the secret word correctly  ***")
-            println("..")
+//            println("*** You guessed the secret word correctly  ***")
             foundWord = true
         }
         for (i <- secretWordArr.indices) {
