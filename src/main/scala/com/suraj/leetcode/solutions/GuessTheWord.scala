@@ -1,4 +1,4 @@
-package com.suraj.leetcode
+package com.suraj.leetcode.solutions
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
@@ -12,14 +12,14 @@ object GuessTheWord {
         var oList: ListBuffer[String] = Random.shuffle(wordlist.toList).to(ListBuffer)
         while (chances < 10) {
             // println(s"*** B: Chance $chances , oList  $oList -> ${oList.length} ***")
-            var nList: ListBuffer[String] = new ListBuffer[String]
-            var (word: String, matchCount: Int) = guessWord(master, oList)
+            val nList: ListBuffer[String] = new ListBuffer[String]
+            val (word: String, matchCount: Int) = guessWord(master, oList)
             chances += 1
             if (matchCount == 6) return
             if (matchCount == 0) oList --= matchingZeroCountMembers(oList, word).toList
             for (i <- 1 until oList.length) {
-                var str = oList(i)
-                var n_matchCount = countMatches(word, str)
+                val str = oList(i)
+                val n_matchCount = countMatches(word, str)
                 if (n_matchCount == matchCount) {
                     //println(s"$word - $str, $n_matchCount")
                     nList += str
@@ -30,14 +30,14 @@ object GuessTheWord {
         }
     }
 
-    private def guessWord(master: Master, oList: ListBuffer[String]) = {
-        var word = oList.head
-        var matchCount = master.guess(word)
+    private def guessWord(master: Master, oList: ListBuffer[String]): (String, Int) = {
+        val word = oList.head
+        val matchCount = master.guess(word)
         (word, matchCount)
     }
 
     private def matchingZeroCountMembers(oList: ListBuffer[String], word: String): ListBuffer[String] = {
-        var t_zeroMatches: ListBuffer[String] = new ListBuffer[String]
+        val t_zeroMatches: ListBuffer[String] = new ListBuffer[String]
         for (i <- 1 until oList.length) {
             if (countMatches(word, oList(i)) > 0) t_zeroMatches += oList(i)
         }
@@ -62,14 +62,14 @@ class Master(secretWord: String, guessCounter: Int) {
 
     def guess(word: String): Int = {
         guessCounterInc += 1
-//        println(s"_Master guess counter : $guessCounterInc _")
+        //        println(s"_Master guess counter : $guessCounterInc _")
         if (guessCounterInc > guessCounter) {
             //println("You maxed out")
             throw new Exception("Failed")
         }
         var counter = 0
         if (word.equals(secretWord)) {
-//            println("*** You guessed the secret word correctly  ***")
+            //            println("*** You guessed the secret word correctly  ***")
             foundWord = true
         }
         for (i <- secretWordArr.indices) {

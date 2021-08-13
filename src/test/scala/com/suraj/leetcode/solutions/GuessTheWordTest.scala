@@ -1,10 +1,11 @@
-package com.suraj.leetcode
+package com.suraj.leetcode.solutions
 
-import org.scalatest.funsuite.AnyFunSuite
+import com.suraj.leetcode.solutions.base.TestBaseClass
 
 import scala.collection.mutable
 
-class GuessTheWordTest extends AnyFunSuite {
+class GuessTheWordTest extends TestBaseClass {
+
     test("Test Case 1") {
         val inPutMap = mutable.HashMap[String, Array[String]]("abcczz" -> Array("poiuhv", "rtghjk", "qazwsx",
             "bnmkjh", "abopcz", "wcckzz", "acckzz", "ghjczz",
@@ -47,7 +48,7 @@ class GuessTheWordTest extends AnyFunSuite {
         var flag = false
         inPutMap.foreach(item => {
             val master = new Master(item._1, 10)
-            while(!flag){
+            while (!flag) {
                 GuessTheWord.findSecretWord(item._2, master)
                 flag = master.foundWord
             }
