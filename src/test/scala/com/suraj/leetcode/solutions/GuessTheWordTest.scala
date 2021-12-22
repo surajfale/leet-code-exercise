@@ -48,10 +48,11 @@ class GuessTheWordTest extends TestBaseClass {
         var flag = false
         inPutMap.foreach(item => {
             val master = new Master(item._1, 10)
-            while (!flag) {
+            while !flag
+            do
                 GuessTheWord.findSecretWord(item._2, master)
                 flag = master.foundWord
-            }
+
         })
         flag
     }
